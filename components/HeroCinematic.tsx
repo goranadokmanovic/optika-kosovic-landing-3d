@@ -277,7 +277,7 @@ export default function HeroCinematic() {
           muted="Svaka dioptrija."
           opacity={secondOpacity}
           y={secondY}
-          positionClass="inset-x-6 top-[12%] md:inset-x-auto md:left-auto md:right-10 lg:right-16 md:top-[14%] md:translate-y-0"
+          positionClass="inset-x-6 top-[12%] md:inset-x-auto md:left-auto md:right-10 lg:right-16 md:top-auto md:bottom-[34%] md:translate-y-0"
         />
         <Caption
           align="bottom"
