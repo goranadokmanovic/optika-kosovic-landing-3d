@@ -1,3 +1,4 @@
+import Aktuelno from "@/components/Aktuelno";
 import Brands from "@/components/Brands";
 import ContactFinal from "@/components/ContactFinal";
 import CrizalBlock from "@/components/CrizalBlock";
@@ -17,6 +18,7 @@ export default function Home() {
         <Header />
         <HeroCinematicLoader />
         <VisionIntro />
+        <Aktuelno />
         <Services />
         <Showroom />
         <CrizalBlock />

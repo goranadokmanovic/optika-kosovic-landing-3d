@@ -40,7 +40,7 @@ export default function Services() {
     <section id="usluge" className="bg-background py-28 md:py-44">
       <div className="container mx-auto max-w-[1400px] px-6 md:px-12">
         <SectionHeading
-          eyebrow="02 · Usluge"
+          eyebrow="03 · Usluge"
           title="Sve za vaš vid."
           muted="Na jednom mestu."
         />

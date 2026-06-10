@@ -8,7 +8,7 @@ export default function Showroom() {
       <div className="container mx-auto max-w-[1400px] px-6 md:px-12">
         <div className="grid gap-12 lg:grid-cols-[0.75fr_1.25fr] lg:items-center">
           <SectionHeading
-            eyebrow="03 · Izbliza"
+            eyebrow="04 · Izbliza"
             title="Zavrtite ih."
             muted="Kao u radnji."
           />

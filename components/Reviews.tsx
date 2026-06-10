@@ -30,7 +30,7 @@ export default function Reviews() {
       className="bg-background bg-[radial-gradient(circle_at_15%_20%,var(--color-brand-soft),transparent_45%)] py-28 md:py-44"
     >
       <div className="container mx-auto max-w-[1400px] px-6 md:px-12">
-        <SectionHeading eyebrow="06 · Utisci" title="Šta kažu" muted="naši korisnici." />
+        <SectionHeading eyebrow="07 · Utisci" title="Šta kažu" muted="naši korisnici." />
 
         <div className="mt-16 grid gap-4 lg:grid-cols-3">
           {reviews.map((review, index) => (

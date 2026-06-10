@@ -10,7 +10,7 @@ export default function Brands() {
   return (
     <section id="brendovi" className="bg-background py-28 md:py-44">
       <div className="container mx-auto max-w-[1400px] px-6 md:px-12">
-        <SectionHeading eyebrow="05 · Brendovi" title="Proverena imena." muted="Bez buke." />
+        <SectionHeading eyebrow="06 · Brendovi" title="Proverena imena." muted="Bez buke." />
       </div>
 
       <motion.div

@@ -6,7 +6,7 @@ import type { MotionValue } from "framer-motion";
 import { useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
 
-export const FACE_REFLECTION_INTENSITY = 0.5;
+export const FACE_REFLECTION_INTENSITY = 1.0;
 export const LENS_OPACITY = 0.88;
 export const LENS_PURPLE_SHEEN = 1;
 
@@ -14,14 +14,6 @@ type GlassesModelProps = ThreeElements["group"] & {
   fit?: boolean;
   reflectionProgress?: MotionValue<number>;
 };
-
-function clamp(value: number) {
-  return Math.min(Math.max(value, 0), 1);
-}
-
-function smooth(value: number) {
-  return value * value * (3 - 2 * value);
-}
 
 function isLensMaterial(material: THREE.Material, meshName: string) {
   const name = `${material.name} ${meshName}`.toLowerCase();
@@ -44,8 +36,8 @@ function createFaceReflectionTexture() {
   }
 
   const canvas = document.createElement("canvas");
-  canvas.width = 512;
-  canvas.height = 256;
+  canvas.width = 1024;
+  canvas.height = 512;
 
   const context = canvas.getContext("2d");
 
@@ -53,31 +45,70 @@ function createFaceReflectionTexture() {
     return null;
   }
 
-  const gradient = context.createLinearGradient(0, 0, canvas.width, canvas.height);
-  gradient.addColorStop(0, "#f4eff9");
-  gradient.addColorStop(0.45, "#e4d8ef");
-  gradient.addColorStop(1, "#d2d5d0");
-  context.fillStyle = gradient;
+  const background = context.createLinearGradient(0, 0, 0, canvas.height);
+  background.addColorStop(0, "#efe7ff");
+  background.addColorStop(0.5, "#ffffff");
+  background.addColorStop(1, "#d8c5f0");
+
+  context.fillStyle = background;
   context.fillRect(0, 0, canvas.width, canvas.height);
 
-  context.filter = "blur(18px)";
-  context.fillStyle = "rgba(27, 32, 30, 0.34)";
-  context.beginPath();
-  context.ellipse(258, 91, 39, 51, 0, 0, Math.PI * 2);
-  context.fill();
+  const drawSilhouette = (centerRatio: number, scale: number, alpha: number) => {
+    const centerX = canvas.width * centerRatio;
+    const headTop = canvas.height * 0.06;
+    const headWidth = canvas.width * 0.32 * scale;
+    const headHeight = canvas.height * 0.76 * scale;
+    const shoulderY = canvas.height * 0.74;
+    const shoulderWidth = canvas.width * 0.78 * scale;
 
-  context.fillStyle = "rgba(27, 32, 30, 0.25)";
-  context.beginPath();
-  context.ellipse(258, 174, 100, 48, 0, Math.PI, Math.PI * 2);
-  context.fill();
+    context.globalAlpha = alpha;
+    context.fillStyle = "#2a1640";
+    context.beginPath();
+    context.ellipse(
+      centerX,
+      headTop + headHeight * 0.43,
+      headWidth * 0.5,
+      headHeight * 0.47,
+      0,
+      0,
+      Math.PI * 2,
+    );
+    context.moveTo(centerX - headWidth * 0.22, shoulderY - canvas.height * 0.15);
+    context.bezierCurveTo(
+      centerX - shoulderWidth * 0.38,
+      shoulderY - canvas.height * 0.08,
+      centerX - shoulderWidth * 0.48,
+      shoulderY + canvas.height * 0.1,
+      centerX - shoulderWidth * 0.5,
+      canvas.height,
+    );
+    context.lineTo(centerX + shoulderWidth * 0.5, canvas.height);
+    context.bezierCurveTo(
+      centerX + shoulderWidth * 0.48,
+      shoulderY + canvas.height * 0.1,
+      centerX + shoulderWidth * 0.38,
+      shoulderY - canvas.height * 0.08,
+      centerX + headWidth * 0.22,
+      shoulderY - canvas.height * 0.15,
+    );
+    context.closePath();
+    context.fill();
+    context.globalAlpha = 1;
+  };
+
+  const silhouettePositions = [0.12, 0.38, 0.62, 0.88];
 
   context.filter = "blur(28px)";
-  context.fillStyle = "rgba(122, 75, 184, 0.12)";
-  context.fillRect(0, 0, canvas.width, canvas.height);
+  silhouettePositions.forEach((centerRatio) => drawSilhouette(centerRatio, 1.12, 1));
+  context.filter = "blur(10px)";
+  silhouettePositions.forEach((centerRatio) => drawSilhouette(centerRatio, 1, 0.96));
+  context.filter = "none";
 
   const texture = new THREE.CanvasTexture(canvas);
   texture.mapping = THREE.EquirectangularReflectionMapping;
   texture.colorSpace = THREE.SRGBColorSpace;
+  texture.magFilter = THREE.LinearFilter;
+  texture.minFilter = THREE.LinearFilter;
   texture.needsUpdate = true;
 
   return texture;
@@ -195,12 +226,8 @@ export function GlassesModel({ fit = true, reflectionProgress, ...props }: Glass
       return;
     }
 
-    const t = reflectionProgress.get();
-    const reflectionFade = 1 - smooth(clamp((t - 0.6) / 0.2));
-    const intensity = FACE_REFLECTION_INTENSITY * reflectionFade;
-
     lensMaterialsRef.current.forEach((material) => {
-      material.envMapIntensity = intensity;
+      material.envMapIntensity = FACE_REFLECTION_INTENSITY;
     });
   });
 

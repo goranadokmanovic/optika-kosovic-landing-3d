@@ -24,6 +24,42 @@ function smooth(value: number) {
   return value * value * (3 - 2 * value);
 }
 
+const HERO_SHADOW_OPACITY = 0.28;
+
+function FadingHeroShadow({ pinProgressValue }: { pinProgressValue: MotionValue<number> }) {
+  const shadowRef = useRef<THREE.Group>(null);
+
+  useFrame(() => {
+    const zoomFade = 1 - smooth(clamp((pinProgressValue.get() - 0.8) / 0.14));
+    const opacity = HERO_SHADOW_OPACITY * zoomFade;
+
+    shadowRef.current?.traverse((object) => {
+      if (!(object instanceof THREE.Mesh)) {
+        return;
+      }
+
+      const materials = Array.isArray(object.material) ? object.material : [object.material];
+
+      materials.forEach((material) => {
+        material.transparent = true;
+        material.opacity = opacity;
+      });
+    });
+  });
+
+  return (
+    <group ref={shadowRef}>
+      <ContactShadows
+        position={[0, -0.95, 0]}
+        opacity={HERO_SHADOW_OPACITY}
+        scale={8}
+        blur={2.8}
+        far={4}
+      />
+    </group>
+  );
+}
+
 function HeroScene({
   pinProgressValue,
 }: {
@@ -141,13 +177,7 @@ function HeroScene({
         </group>
         <Environment preset="studio" environmentIntensity={0.9} />
       </Suspense>
-      <ContactShadows
-        position={[0, -0.95, 0]}
-        opacity={0.28}
-        scale={8}
-        blur={2.8}
-        far={4}
-      />
+      <FadingHeroShadow pinProgressValue={pinProgressValue} />
     </>
   );
 }
@@ -201,11 +231,11 @@ export default function HeroCinematic() {
   });
   const t = useTransform(scrollYProgress, pinProgress);
 
-  const firstOpacity = useTransform(t, [0, 0.3, 0.35], [1, 1, 0]);
-  const firstY = useTransform(t, [0, 0.35], [0, -36]);
-  const secondOpacity = useTransform(t, [0.3, 0.38, 0.56, 0.62], [0, 1, 1, 0]);
-  const secondY = useTransform(t, [0.3, 0.62], [40, -28]);
-  const thirdOpacity = useTransform(t, [0.56, 0.65, 0.96, 1], [0, 1, 1, 0]);
+  const firstOpacity = useTransform(t, [0, 0.32, 0.55], [1, 1, 0]);
+  const firstY = useTransform(t, [0, 0.55], [0, -30]);
+  const secondOpacity = useTransform(t, [0.28, 0.4, 0.72, 0.86], [0, 1, 1, 0]);
+  const secondY = useTransform(t, [0.28, 0.86], [36, -24]);
+  const thirdOpacity = useTransform(t, [0.56, 0.65, 1], [0, 1, 1]);
   const thirdY = useTransform(t, [0.56, 1], [36, -24]);
 
   return (

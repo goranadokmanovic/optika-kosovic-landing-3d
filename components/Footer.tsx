@@ -1,54 +1,38 @@
-import { Globe } from "lucide-react";
-
-const links = [
-  { label: "Usluge", href: "#usluge" },
-  { label: "Brendovi", href: "#brendovi" },
-  { label: "Kontakt", href: "#kontakt" },
-];
-
 export default function Footer() {
   return (
-    <footer className="overflow-hidden border-t border-white/10 bg-brand-deep">
-      <div
-        aria-hidden="true"
-        className="bg-gradient-to-b from-white/8 to-white/[0.02] bg-clip-text px-4 pt-10 text-center font-serif text-[14vw] italic leading-none tracking-[-0.05em] text-transparent"
-      >
-        KOSOVIĆ
-      </div>
-
-      <div className="container mx-auto flex max-w-[1400px] flex-col gap-10 px-6 pb-10 pt-6 md:px-12 lg:flex-row lg:items-end lg:justify-between">
-        <div>
-          <div className="font-serif text-3xl italic tracking-[-0.04em]">
-            Optika Kosović
-          </div>
-          <div className="mt-2 font-mono text-[10px] uppercase tracking-[0.3em] text-white/40">
-            Novi Banovci
-          </div>
-        </div>
-
-        <div className="flex flex-wrap items-center gap-6">
-          {links.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              className="font-mono text-[10px] uppercase tracking-[0.25em] text-white/50 transition-colors hover:text-accent"
-            >
-              {link.label}
-            </a>
-          ))}
-          <a
-            href="#kontakt"
-            className="inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.25em] text-white/50 transition-colors hover:text-accent"
-          >
-            <Globe size={14} />
-            Facebook
+    <footer className="border-t border-white/10 bg-brand-deep">
+      <div className="container mx-auto grid max-w-[1200px] gap-10 px-6 py-12 text-center text-accent md:grid-cols-2 md:px-12">
+        <div className="space-y-4 text-base font-semibold md:text-lg">
+          <a href="tel:+381606868054" className="block transition-colors hover:text-white">
+            +381606868054
           </a>
+          <a
+            href="mailto:optikakosovic@gmail.com"
+            className="block transition-colors hover:text-white"
+          >
+            optikakosovic@gmail.com
+          </a>
+          <div>Novi Banovci</div>
+          <div>PIB: 113213980</div>
         </div>
-      </div>
 
-      <div className="container mx-auto flex max-w-[1400px] flex-col gap-3 border-t border-white/10 px-6 py-5 font-mono text-[10px] uppercase tracking-[0.25em] text-white/35 md:flex-row md:items-center md:justify-between md:px-12">
-        <span>© 2026 Optika Kosović · Sva prava zadržana</span>
-        <span>Sajt: MyNestOf4</span>
+        <div className="flex flex-col items-center justify-center gap-6">
+          <div className="text-base font-semibold md:text-lg">
+            Posetite nas i na društvenoj mreži
+          </div>
+          <a
+            href="https://www.facebook.com/"
+            target="_blank"
+            rel="noreferrer"
+            aria-label="Facebook"
+            className="flex h-12 w-12 items-center justify-center rounded-lg bg-[#1455d9] text-4xl font-bold leading-none text-white transition-transform hover:-translate-y-1"
+          >
+            f
+          </a>
+          <div className="text-sm font-semibold">
+            Copyright © 2023 | Sva prava zadržana
+          </div>
+        </div>
       </div>
     </footer>
   );

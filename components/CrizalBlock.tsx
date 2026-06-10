@@ -22,7 +22,7 @@ export default function CrizalBlock() {
     <section className="bg-background py-28 md:py-44">
       <div className="container mx-auto grid max-w-[1400px] gap-12 px-6 md:px-12 lg:grid-cols-2 lg:items-center">
         <div>
-          <SectionHeading eyebrow="04 · Stakla" title="Teško čistite" muted="stakla?" />
+          <SectionHeading eyebrow="05 · Stakla" title="Teško čistite" muted="stakla?" />
           <Reveal delay={0.12}>
             <p className="mt-8 max-w-xl text-lg leading-8 text-text-secondary">
               Crizal stakla imaju specijalni premaz koji odbija prašinu, vodu i otiske
