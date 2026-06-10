@@ -1,0 +1,8 @@
+Model Information:
+* title:	Ray-Ban Glasses
+* source:	https://sketchfab.com/3d-models/ray-ban-glasses-952d54c3025141b7bc97c55ca63b93f9
+* author:	FOXYSCA (https://sketchfab.com/FOXYSCA)
+
+Model License:
+* license type:	SKETCHFAB Standard (https://sketchfab.com/licenses)
+* requirements:	Under basic restrictions, use worldwide, on all types of media, commercially or not, and in all types of derivative works
