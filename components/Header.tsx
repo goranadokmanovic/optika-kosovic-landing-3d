@@ -4,6 +4,7 @@ import { useState } from "react";
 import { motion, useMotionValueEvent, useScroll } from "framer-motion";
 import { ChevronDown, Search } from "lucide-react";
 import Image from "next/image";
+import { faqHref, faqItems, faqSectionHref } from "@/lib/faq-data";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
@@ -15,13 +16,13 @@ type NavItem = {
 };
 
 const navItems: NavItem[] = [
-  { label: "Početna", href: "#" },
+  { label: "Početna", href: "/" },
   { label: "O nama", href: "#dobrodosli" },
   { label: "Aktuelno", href: "#aktuelno" },
   { label: "Proizvodi", href: "#brendovi", hasDropdown: true, dropdownType: "products" },
   { label: "Usluge", href: "#usluge", hasDropdown: true, dropdownType: "services" },
   { label: "Kontakt", href: "#kontakt" },
-  { label: "Česta pitanja", href: "#kontakt", hasDropdown: true, dropdownType: "faq" },
+  { label: "Česta pitanja", href: faqHref, hasDropdown: true, dropdownType: "faq" },
 ];
 
 const productCategories = [
@@ -38,23 +39,14 @@ const serviceCategories = [
   "Servis naočara",
 ];
 
-const faqCategories = [
-  "Nepravilno korišćenje naočara",
-  "Kratkovidost - myopia",
-  "Naočare za rad",
-  "Zašto odabrati kvalitetna stakla",
-  "Katarakta - zamućenje očnog sočiva",
-  "Oštećeni zaštitni slojevi na naočarima",
-  "Prizme i prizma folija",
-  "Plastična stakla u boji",
-];
-
-export default function Header() {
-  const [scrolled, setScrolled] = useState(false);
+export default function Header({ solid = false }: { solid?: boolean }) {
+  const [scrolled, setScrolled] = useState(solid);
   const { scrollY } = useScroll();
 
   useMotionValueEvent(scrollY, "change", (latest) => {
-    setScrolled(latest > window.innerHeight * 2.8);
+    if (!solid) {
+      setScrolled(latest > window.innerHeight * 2.8);
+    }
   });
 
   return (
@@ -64,12 +56,12 @@ export default function Header() {
       transition={{ duration: 0.9, ease: EASE }}
       className={`fixed left-0 right-0 top-0 z-50 transition-colors duration-500 ${
         scrolled
-          ? "border-b border-white/10 bg-brand-deep/85 text-white backdrop-blur-md"
+          ? "border-b border-black/10 bg-white/85 text-neutral-950 backdrop-blur-md"
           : "bg-transparent text-neutral-950"
       }`}
     >
       <div className="flex w-full items-center justify-between px-4 py-3 md:py-4 md:pl-16 md:pr-3">
-        <a href="#" aria-label="Optika Kosović početna" className="flex min-w-0 items-center gap-3">
+        <a href="/" aria-label="Optika Kosović početna" className="flex min-w-0 items-center gap-3">
           <Image
             src="/images/profilna-slika.jpg"
             alt="Optika Kosović logo"
@@ -84,7 +76,7 @@ export default function Header() {
             </div>
             <div
               className={`mt-1 truncate font-mono text-[9px] uppercase tracking-[0.25em] md:text-[11px] md:tracking-[0.35em] ${
-                scrolled ? "text-white/40" : "text-neutral-950/45"
+                scrolled ? "text-neutral-950/45" : "text-neutral-950/45"
               }`}
             >
               NOVI BANOVCI
@@ -96,11 +88,11 @@ export default function Header() {
           {navItems.map((item) => {
             const dropdownItems =
               item.dropdownType === "products"
-                ? productCategories
+                ? productCategories.map((category) => ({ label: category, href: item.href }))
                 : item.dropdownType === "services"
-                  ? serviceCategories
+                  ? serviceCategories.map((category) => ({ label: category, href: item.href }))
                   : item.dropdownType === "faq"
-                    ? faqCategories
+                    ? faqItems.map((faq) => ({ label: faq.shortTitle, href: faqSectionHref(faq.id) }))
                     : [];
 
             return (
@@ -109,7 +101,7 @@ export default function Header() {
                 href={item.href}
                 className={`relative inline-flex items-center gap-1.5 text-sm font-semibold transition-colors ${
                   scrolled
-                    ? "text-white/70 hover:text-white"
+                    ? "text-neutral-950/65 hover:text-neutral-950"
                     : "text-neutral-950/65 hover:text-neutral-950"
                 }`}
               >
@@ -125,14 +117,14 @@ export default function Header() {
                   <div className="space-y-1">
                     {dropdownItems.map((category) => (
                       <a
-                        key={category}
-                        href={item.href}
+                        key={category.label}
+                        href={category.href}
                         className="flex items-center gap-3 rounded-sm px-4 py-3 text-sm font-semibold text-neutral-700 transition-colors hover:bg-neutral-100 hover:text-neutral-950"
                       >
                         <span className="flex h-4 w-4 shrink-0 items-center justify-center border border-neutral-400 text-neutral-500">
                           <ChevronDown size={10} strokeWidth={2} />
                         </span>
-                        <span className="truncate">{category}</span>
+                        <span className="truncate">{category.label}</span>
                       </a>
                     ))}
                   </div>
@@ -145,7 +137,7 @@ export default function Header() {
             type="button"
             aria-label="Pretraga"
             className={`transition-colors ${
-              scrolled ? "text-white/80 hover:text-white" : "text-neutral-950/70 hover:text-neutral-950"
+              scrolled ? "text-neutral-950/80 hover:text-neutral-950" : "text-neutral-950/70 hover:text-neutral-950"
             }`}
           >
             <Search size={20} strokeWidth={2.2} />

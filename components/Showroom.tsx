@@ -4,7 +4,7 @@ import ShowroomViewerLoader from "@/components/ShowroomViewerLoader";
 
 export default function Showroom() {
   return (
-    <section className="bg-background py-20 md:py-44">
+    <section className="bg-[#f5f5f5] py-20 md:py-44">
       <div className="container mx-auto max-w-[1400px] px-6 md:px-12">
         <div className="grid gap-12 lg:grid-cols-[0.75fr_1.25fr] lg:items-center">
           <SectionHeading

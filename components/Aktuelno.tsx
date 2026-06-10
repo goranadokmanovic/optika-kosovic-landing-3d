@@ -11,7 +11,7 @@ export default function Aktuelno() {
   return (
     <section
       id="aktuelno"
-      className="bg-background bg-[radial-gradient(circle_at_15%_30%,var(--color-brand-soft),transparent_42%)] py-20 md:py-44"
+      className="bg-[#f5f5f5] bg-[radial-gradient(circle_at_15%_30%,var(--color-brand-soft),transparent_42%)] py-20 md:py-44"
     >
       <div className="container mx-auto max-w-[1400px] px-6 md:px-12">
         <div className="grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:items-stretch">
@@ -22,8 +22,8 @@ export default function Aktuelno() {
           />
 
           <Reveal delay={0.12}>
-            <article className="relative overflow-hidden rounded-[2rem] border border-accent/25 bg-surface p-5 md:p-10">
-              <div className="absolute -right-8 -top-12 font-serif text-[180px] italic leading-none text-white/[0.035]">
+            <article className="relative overflow-hidden rounded-[2rem] border border-accent/30 bg-white/80 p-5 shadow-[0_24px_80px_rgba(0,0,0,0.07)] md:p-10">
+              <div className="absolute -right-8 -top-12 font-serif text-[180px] italic leading-none text-neutral-950/[0.035]">
                 %
               </div>
 
@@ -34,32 +34,32 @@ export default function Aktuelno() {
                 </div>
 
                 <div className="grid gap-4 md:grid-cols-2">
-                  <div className="rounded-3xl border border-white/8 bg-white/[0.03] p-6">
+                  <div className="rounded-3xl border border-black/10 bg-white/75 p-6">
                     <div className="mb-8 inline-flex h-12 w-12 items-center justify-center rounded-full bg-brand-soft text-accent">
                       <Glasses size={22} strokeWidth={1.7} />
                     </div>
-                    <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-white/40">
+                    <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-neutral-950/45">
                       Essilor Varilux progresivi
                     </p>
-                    <h3 className="mt-4 font-serif text-3xl italic leading-tight tracking-[-0.04em] text-white md:text-5xl">
+                    <h3 className="mt-4 font-serif text-3xl italic leading-tight tracking-[-0.04em] text-neutral-950 md:text-5xl">
                       Platiš 1 par, dobiješ 2 para.
                     </h3>
                   </div>
 
-                  <div className="rounded-3xl border border-white/8 bg-white/[0.03] p-6">
+                  <div className="rounded-3xl border border-black/10 bg-white/75 p-6">
                     <div className="mb-8 inline-flex h-12 w-12 items-center justify-center rounded-full bg-brand-soft text-accent">
                       <CalendarDays size={22} strokeWidth={1.7} />
                     </div>
-                    <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-white/40">
+                    <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-neutral-950/45">
                       Trajanje popusta
                     </p>
-                    <p className="mt-4 font-serif text-3xl italic leading-tight tracking-[-0.04em] text-white md:text-5xl">
+                    <p className="mt-4 font-serif text-3xl italic leading-tight tracking-[-0.04em] text-neutral-950 md:text-5xl">
                       Do 31.12.2025.
                     </p>
                   </div>
                 </div>
 
-                <div className="mt-4 rounded-3xl border border-white/8 bg-white/[0.03] p-6 md:p-7">
+                <div className="mt-4 rounded-3xl border border-black/10 bg-white/75 p-6 md:p-7">
                   <div className="flex flex-col gap-4 md:flex-row md:items-start">
                     <div className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-accent/15 text-accent">
                       <CreditCard size={22} strokeWidth={1.7} />
@@ -68,9 +68,9 @@ export default function Aktuelno() {
                       <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-accent">
                         Mogućnost plaćanja na rate
                       </p>
-                      <div className="mt-5 grid gap-3 text-base leading-7 text-text-secondary md:grid-cols-2">
+                      <div className="mt-5 grid gap-3 text-base leading-7 text-neutral-950/70 md:grid-cols-2">
                         {paymentOptions.map((option) => (
-                          <p key={option} className="rounded-2xl bg-black/15 p-4">
+                          <p key={option} className="rounded-2xl bg-black/[0.04] p-4">
                             {option}
                           </p>
                         ))}

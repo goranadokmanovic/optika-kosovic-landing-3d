@@ -14,7 +14,7 @@ import Reviews from "@/components/Reviews";
 export default function Home() {
   return (
     <SmoothScroll>
-      <main className="min-h-screen bg-[#0a0a0a] text-white selection:bg-accent/30">
+      <main className="min-h-screen bg-[#f5f5f5] text-neutral-950 selection:bg-accent/30">
         <Header />
         <HeroCinematicLoader />
         <VisionIntro />

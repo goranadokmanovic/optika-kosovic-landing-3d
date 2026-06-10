@@ -21,7 +21,7 @@ export default function SectionHeading({
       </div>
       <h2 className="font-serif text-4xl italic leading-[0.95] tracking-[-0.04em] sm:text-5xl md:text-7xl">
         {title}
-        <span className="block text-white/40">{muted}</span>
+        <span className="block text-neutral-950/40">{muted}</span>
       </h2>
     </Reveal>
   );

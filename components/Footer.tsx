@@ -1,19 +1,19 @@
 export default function Footer() {
   return (
-    <footer className="border-t border-white/10 bg-brand-deep">
+    <footer className="border-t border-black/10 bg-[#f5f5f5]">
       <div className="container mx-auto grid max-w-[1200px] gap-10 px-6 py-12 text-center text-accent md:grid-cols-2 md:px-12">
         <div className="space-y-4 text-base font-semibold md:text-lg">
-          <a href="tel:+381606868054" className="block transition-colors hover:text-white">
-            +381606868054
+          <a href="tel:+381123456789" className="block transition-colors hover:text-neutral-950">
+            +381 12 345 6789
           </a>
           <a
-            href="mailto:optikakosovic@gmail.com"
-            className="block transition-colors hover:text-white"
+            href="mailto:kontakt@primer-optika.rs"
+            className="block transition-colors hover:text-neutral-950"
           >
-            optikakosovic@gmail.com
+            kontakt@primer-optika.rs
           </a>
-          <div>Novi Banovci</div>
-          <div>PIB: 113213980</div>
+          <div>Grad Primer</div>
+          <div>PIB: 000000000</div>
         </div>
 
         <div className="flex flex-col items-center justify-center gap-6">

@@ -36,7 +36,7 @@ export default function RootLayout({
       lang="sr-Latn-RS"
       className={`${inter.variable} ${playfairDisplay.variable} ${geistMono.variable} h-full scroll-smooth antialiased`}
     >
-      <body className="flex min-h-full flex-col bg-background font-sans text-text-primary">
+      <body className="flex min-h-full flex-col bg-[#f5f5f5] font-sans text-text-primary">
         <CustomCursor />
         {children}
       </body>

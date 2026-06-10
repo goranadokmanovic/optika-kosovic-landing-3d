@@ -27,7 +27,7 @@ export default function Reviews() {
   return (
     <section
       id="utisci"
-      className="bg-background bg-[radial-gradient(circle_at_15%_20%,var(--color-brand-soft),transparent_45%)] py-20 md:py-44"
+      className="bg-[#f5f5f5] bg-[radial-gradient(circle_at_15%_20%,var(--color-brand-soft),transparent_45%)] py-20 md:py-44"
     >
       <div className="container mx-auto max-w-[1400px] px-6 md:px-12">
         <SectionHeading eyebrow="07 · Utisci" title="Šta kažu" muted="naši korisnici." />
@@ -35,8 +35,8 @@ export default function Reviews() {
         <div className="mt-12 grid gap-4 md:mt-16 lg:grid-cols-3">
           {reviews.map((review, index) => (
             <Reveal key={review.author} delay={index * 0.08}>
-              <article className="relative min-h-72 overflow-hidden rounded-3xl border border-brand/25 bg-surface p-6 md:min-h-80 md:p-7">
-                <div className="absolute -right-2 -top-10 font-serif text-[140px] italic leading-none text-white/[0.04]">
+              <article className="relative min-h-72 overflow-hidden rounded-3xl border border-black/10 bg-white/80 p-6 shadow-[0_18px_60px_rgba(0,0,0,0.05)] md:min-h-80 md:p-7">
+                <div className="absolute -right-2 -top-10 font-serif text-[140px] italic leading-none text-neutral-950/[0.04]">
                   &quot;
                 </div>
                 <div className="relative z-10">
@@ -68,7 +68,7 @@ export default function Reviews() {
                   >
                     {review.quote}
                   </motion.p>
-                  <div className="mt-10 font-mono text-[10px] uppercase tracking-[0.25em] text-white/40">
+                  <div className="mt-10 font-mono text-[10px] uppercase tracking-[0.25em] text-neutral-950/45">
                     {review.author}
                   </div>
                 </div>

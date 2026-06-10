@@ -190,6 +190,7 @@ function Caption({
   opacity,
   y,
   positionClass,
+  titleClassName,
 }: {
   align: "left" | "right" | "bottom";
   eyebrow: string;
@@ -198,6 +199,7 @@ function Caption({
   opacity: MotionValue<number>;
   y: MotionValue<number>;
   positionClass?: string;
+  titleClassName?: string;
 }) {
   const position =
     positionClass ??
@@ -219,9 +221,12 @@ function Caption({
         <div className="h-px max-w-[180px] flex-1 bg-gradient-to-r from-accent/40 to-transparent" />
       </div>
       <h1
-        className={`font-serif text-4xl italic leading-[0.9] tracking-[-0.05em] text-neutral-950 sm:text-5xl md:text-7xl lg:text-8xl ${
-          align === "bottom" ? "text-center" : ""
-        }`}
+        className={
+          titleClassName ??
+          `font-serif text-4xl italic leading-[0.9] tracking-[-0.05em] text-neutral-950 sm:text-5xl md:text-7xl lg:text-8xl ${
+            align === "bottom" ? "text-center" : ""
+          }`
+        }
       >
         {title}
         {muted ? <span className="block text-neutral-950/45">{muted}</span> : null}
@@ -248,6 +253,7 @@ export default function HeroCinematic() {
   return (
     <section ref={sectionRef} className="relative h-[300vh] bg-[#f5f5f5]">
       <div className="sticky top-0 h-screen w-full overflow-hidden bg-[#f5f5f5]">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_54%,rgba(10,10,10,0.08),transparent_38%)]" />
         <Canvas
           gl={{ alpha: true, toneMapping: THREE.NoToneMapping }}
           style={{ background: "transparent" }}
@@ -257,7 +263,7 @@ export default function HeroCinematic() {
             gl.toneMappingExposure = 1;
             scene.environmentIntensity = 0.9;
           }}
-          className="absolute inset-0"
+          className="absolute inset-0 z-10"
         >
           <HeroScene pinProgressValue={t} />
         </Canvas>
@@ -277,7 +283,8 @@ export default function HeroCinematic() {
           muted="Svaka dioptrija."
           opacity={secondOpacity}
           y={secondY}
-          positionClass="inset-x-6 top-[12%] md:inset-x-auto md:left-auto md:right-10 lg:right-16 md:top-auto md:bottom-[34%] md:translate-y-0"
+          positionClass="inset-x-6 top-[12%] md:inset-x-auto md:left-auto md:right-8 lg:right-16 md:top-[9%] lg:top-[10%] md:max-w-[420px] lg:max-w-[520px] xl:max-w-[620px] md:translate-y-0"
+          titleClassName="font-serif text-4xl italic leading-[0.9] tracking-[-0.05em] text-neutral-950 sm:text-5xl md:text-right md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl"
         />
         <Caption
           align="bottom"

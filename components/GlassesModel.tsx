@@ -30,6 +30,11 @@ function isNosePadMaterial(material: THREE.Material, meshName: string) {
   );
 }
 
+function isGoldMetalMaterial(material: THREE.Material, meshName: string) {
+  const name = `${material.name} ${meshName}`.toLowerCase();
+  return name.includes("material") || name.includes("object_1");
+}
+
 function createFaceReflectionTexture() {
   if (typeof document === "undefined") {
     return null;
@@ -160,11 +165,21 @@ function tuneMaterial(material: THREE.Material, meshName: string) {
     return;
   }
 
-  if (standardMaterial.map) {
-    standardMaterial.color?.set("#ffffff");
+  if (isGoldMetalMaterial(material, meshName)) {
+    standardMaterial.color?.set("#c9971e");
+    standardMaterial.metalness = 0.85;
+    standardMaterial.roughness = 0.22;
+    standardMaterial.envMapIntensity = 1.4;
+  } else if (standardMaterial.map) {
+    standardMaterial.color?.set("#111111");
+    standardMaterial.metalness = 0.12;
+    standardMaterial.roughness = 0.34;
+    standardMaterial.envMapIntensity = 1.05;
+  } else {
+    standardMaterial.color?.set("#111111");
   }
 
-  standardMaterial.envMapIntensity = 0.95;
+  standardMaterial.envMapIntensity = standardMaterial.envMapIntensity || 0.95;
   material.transparent = false;
   material.depthWrite = true;
   material.depthTest = true;
