@@ -6,6 +6,7 @@ import { useEffect, useMemo } from "react";
 import * as THREE from "three";
 
 export const LENS_OPACITY = 0.88;
+export const LENS_PURPLE_SHEEN = 0.55;
 
 type GlassesModelProps = ThreeElements["group"] & {
   fit?: boolean;
@@ -38,26 +39,23 @@ function tuneMaterial(material: THREE.Material, meshName: string) {
   const isNosePad = isNosePadMaterial(material, meshName);
 
   if (isLens) {
-    standardMaterial.map = null;
-    standardMaterial.metalnessMap = null;
     standardMaterial.roughnessMap = null;
-    standardMaterial.normalMap = null;
-    standardMaterial.envMap = null;
-    standardMaterial.color = new THREE.Color("#d8ebe3");
+    standardMaterial.color = new THREE.Color("#9fceb6");
     standardMaterial.metalness = 0;
-    standardMaterial.roughness = 0.45;
-    standardMaterial.envMapIntensity = 0;
+    standardMaterial.roughness = 0.34;
+    standardMaterial.envMapIntensity = 0.12;
     standardMaterial.opacity = LENS_OPACITY;
     material.depthWrite = true;
     material.depthTest = true;
 
     if ("transmission" in physicalMaterial) {
       physicalMaterial.transmission = 0;
-      physicalMaterial.transmissionMap = null;
     }
 
     if ("sheen" in physicalMaterial) {
-      physicalMaterial.sheen = 0;
+      physicalMaterial.sheen = LENS_PURPLE_SHEEN;
+      physicalMaterial.sheenColor = new THREE.Color("#7a4bb8");
+      physicalMaterial.sheenRoughness = 0.45;
     }
 
     if ("specularIntensity" in physicalMaterial) {
