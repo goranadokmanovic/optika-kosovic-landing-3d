@@ -205,21 +205,21 @@ function Caption({
       ? "inset-x-6 top-[12%] md:inset-x-auto md:left-12 md:right-auto lg:left-20 md:top-1/2 md:-translate-y-1/2"
       : align === "right"
         ? "inset-x-6 top-[12%] md:inset-x-auto md:left-auto md:right-12 lg:right-20 md:top-1/2 md:-translate-y-1/2"
-        : "inset-x-6 top-[12%] md:top-auto md:bottom-16 md:left-1/2 md:right-auto md:w-[min(720px,calc(100vw-3rem))] md:-translate-x-1/2");
+        : "inset-x-6 bottom-24 md:top-auto md:bottom-16 md:left-1/2 md:right-auto md:w-[min(720px,calc(100vw-3rem))] md:-translate-x-1/2");
 
   return (
     <motion.div
       style={{ opacity, y }}
       className={`pointer-events-none absolute z-30 max-w-xl ${position}`}
     >
-      <div className={`mb-4 flex items-center gap-3 ${align === "bottom" ? "justify-center" : ""}`}>
-        <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-accent">
+      <div className={`mb-3 flex items-center gap-3 md:mb-4 ${align === "bottom" ? "justify-center" : ""}`}>
+        <span className="font-mono text-[9px] uppercase tracking-[0.24em] text-accent md:text-[10px] md:tracking-[0.3em]">
           {eyebrow}
         </span>
         <div className="h-px max-w-[180px] flex-1 bg-gradient-to-r from-accent/40 to-transparent" />
       </div>
       <h1
-        className={`font-serif text-5xl italic leading-[0.9] tracking-[-0.05em] text-neutral-950 md:text-7xl lg:text-8xl ${
+        className={`font-serif text-4xl italic leading-[0.9] tracking-[-0.05em] text-neutral-950 sm:text-5xl md:text-7xl lg:text-8xl ${
           align === "bottom" ? "text-center" : ""
         }`}
       >
@@ -277,7 +277,7 @@ export default function HeroCinematic() {
           muted="Svaka dioptrija."
           opacity={secondOpacity}
           y={secondY}
-          positionClass="inset-x-6 top-[10%] md:inset-x-auto md:left-auto md:right-10 lg:right-16 md:top-[14%] md:translate-y-0"
+          positionClass="inset-x-6 top-[12%] md:inset-x-auto md:left-auto md:right-10 lg:right-16 md:top-[14%] md:translate-y-0"
         />
         <Caption
           align="bottom"

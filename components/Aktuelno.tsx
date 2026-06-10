@@ -11,7 +11,7 @@ export default function Aktuelno() {
   return (
     <section
       id="aktuelno"
-      className="bg-background bg-[radial-gradient(circle_at_15%_30%,var(--color-brand-soft),transparent_42%)] py-28 md:py-44"
+      className="bg-background bg-[radial-gradient(circle_at_15%_30%,var(--color-brand-soft),transparent_42%)] py-20 md:py-44"
     >
       <div className="container mx-auto max-w-[1400px] px-6 md:px-12">
         <div className="grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:items-stretch">
@@ -22,7 +22,7 @@ export default function Aktuelno() {
           />
 
           <Reveal delay={0.12}>
-            <article className="relative overflow-hidden rounded-[2rem] border border-accent/25 bg-surface p-7 md:p-10">
+            <article className="relative overflow-hidden rounded-[2rem] border border-accent/25 bg-surface p-5 md:p-10">
               <div className="absolute -right-8 -top-12 font-serif text-[180px] italic leading-none text-white/[0.035]">
                 %
               </div>
@@ -41,7 +41,7 @@ export default function Aktuelno() {
                     <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-white/40">
                       Essilor Varilux progresivi
                     </p>
-                    <h3 className="mt-4 font-serif text-4xl italic leading-tight tracking-[-0.04em] text-white md:text-5xl">
+                    <h3 className="mt-4 font-serif text-3xl italic leading-tight tracking-[-0.04em] text-white md:text-5xl">
                       Platiš 1 par, dobiješ 2 para.
                     </h3>
                   </div>
@@ -53,7 +53,7 @@ export default function Aktuelno() {
                     <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-white/40">
                       Trajanje popusta
                     </p>
-                    <p className="mt-4 font-serif text-4xl italic leading-tight tracking-[-0.04em] text-white md:text-5xl">
+                    <p className="mt-4 font-serif text-3xl italic leading-tight tracking-[-0.04em] text-white md:text-5xl">
                       Do 31.12.2025.
                     </p>
                   </div>

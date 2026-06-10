@@ -37,7 +37,7 @@ const services = [
 
 export default function Services() {
   return (
-    <section id="usluge" className="bg-background py-28 md:py-44">
+    <section id="usluge" className="bg-background py-20 md:py-44">
       <div className="container mx-auto max-w-[1400px] px-6 md:px-12">
         <SectionHeading
           eyebrow="03 · Usluge"
@@ -45,13 +45,13 @@ export default function Services() {
           muted="Na jednom mestu."
         />
 
-        <div className="mt-16 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-12 grid gap-4 md:mt-16 md:grid-cols-2 lg:grid-cols-3">
           {services.map((service, index) => {
             const Icon = service.icon;
 
             return (
               <Reveal key={service.title} delay={index * 0.07}>
-                <article className="group relative min-h-72 overflow-hidden rounded-3xl border border-brand/25 bg-surface p-7">
+                <article className="group relative min-h-64 overflow-hidden rounded-3xl border border-brand/25 bg-surface p-6 md:min-h-72 md:p-7">
                   <div className="absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100">
                     <div className="h-full w-full bg-gradient-to-br from-brand-soft via-accent/10 to-transparent" />
                   </div>

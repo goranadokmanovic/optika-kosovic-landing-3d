@@ -68,22 +68,22 @@ export default function Header() {
           : "bg-transparent text-neutral-950"
       }`}
     >
-      <div className="flex w-full items-center justify-between py-4 pl-16 pr-3">
-        <a href="#" aria-label="Optika Kosović početna" className="flex items-center gap-3">
+      <div className="flex w-full items-center justify-between px-4 py-3 md:py-4 md:pl-16 md:pr-3">
+        <a href="#" aria-label="Optika Kosović početna" className="flex min-w-0 items-center gap-3">
           <Image
             src="/images/profilna-slika.jpg"
             alt="Optika Kosović logo"
             width={60}
             height={60}
-            className="h-[60px] w-[60px] rounded-xl object-cover shadow-[0_12px_35px_rgba(0,0,0,0.18)]"
+            className="h-11 w-11 rounded-xl object-cover shadow-[0_12px_35px_rgba(0,0,0,0.18)] md:h-[60px] md:w-[60px]"
             priority
           />
-          <div>
-            <div className="font-serif text-[1.82rem] italic leading-none tracking-[-0.04em]">
+          <div className="min-w-0">
+            <div className="truncate font-serif text-xl italic leading-none tracking-[-0.04em] md:text-[1.82rem]">
               OPTIKA KOSOVIĆ
             </div>
             <div
-              className={`mt-1 font-mono text-[11px] uppercase tracking-[0.35em] ${
+              className={`mt-1 truncate font-mono text-[9px] uppercase tracking-[0.25em] md:text-[11px] md:tracking-[0.35em] ${
                 scrolled ? "text-white/40" : "text-neutral-950/45"
               }`}
             >
@@ -92,7 +92,7 @@ export default function Header() {
           </div>
         </a>
 
-        <nav className="hidden items-center gap-6 md:flex lg:gap-7">
+        <nav className="hidden items-center gap-3 md:flex lg:gap-7">
           {navItems.map((item) => {
             const dropdownItems =
               item.dropdownType === "products"

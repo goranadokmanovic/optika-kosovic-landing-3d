@@ -34,7 +34,7 @@ export default function VisionIntro() {
   return (
     <section
       id="dobrodosli"
-      className="bg-background bg-[radial-gradient(circle_at_85%_15%,var(--color-brand-soft),transparent_45%)] py-28 md:py-44"
+      className="bg-background bg-[radial-gradient(circle_at_85%_15%,var(--color-brand-soft),transparent_45%)] py-20 md:py-44"
     >
       <div className="container mx-auto max-w-[1400px] px-6 md:px-12">
         <div className="grid gap-12 lg:grid-cols-[0.95fr_1.05fr] lg:items-end">
@@ -48,9 +48,9 @@ export default function VisionIntro() {
           </Reveal>
         </div>
 
-        <div className="mt-16 grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-stretch">
+        <div className="mt-12 grid gap-8 md:mt-16 lg:grid-cols-[0.9fr_1.1fr] lg:items-stretch">
           <Reveal>
-            <div className="relative h-full min-h-[320px] overflow-hidden rounded-[2rem] border border-brand/25 bg-[#121212]">
+            <div className="relative h-full min-h-[260px] overflow-hidden rounded-[2rem] border border-brand/25 bg-[#121212] md:min-h-[320px]">
               <Image
                 src="/images/o-nama-optika-kosovic.png"
                 alt="Optika Kosović radnja u Novim Banovcima"
@@ -72,7 +72,7 @@ export default function VisionIntro() {
           </Reveal>
 
           <Reveal delay={0.12}>
-            <div className="flex h-full flex-col justify-center rounded-[2rem] border border-white/10 bg-white/[0.03] p-8 md:p-10">
+            <div className="flex h-full flex-col justify-center rounded-[2rem] border border-white/10 bg-white/[0.03] p-6 md:p-10">
               <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-accent">
                 O optici Kosović
               </p>
@@ -85,7 +85,7 @@ export default function VisionIntro() {
           </Reveal>
         </div>
 
-        <div className="mt-16 grid gap-4 md:grid-cols-3">
+        <div className="mt-12 grid gap-4 md:mt-16 md:grid-cols-3">
           {stats.map((stat, index) => {
             const Icon = stat.icon;
 

@@ -14,12 +14,12 @@ export default function SectionHeading({
   return (
     <Reveal className={className}>
       <div className="mb-4 flex items-center gap-3">
-        <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-accent">
+        <span className="font-mono text-[9px] uppercase tracking-[0.24em] text-accent md:text-[10px] md:tracking-[0.3em]">
           {eyebrow}
         </span>
         <div className="h-px max-w-[180px] flex-1 bg-gradient-to-r from-accent/40 to-transparent" />
       </div>
-      <h2 className="font-serif text-5xl italic leading-[0.95] tracking-[-0.04em] md:text-7xl">
+      <h2 className="font-serif text-4xl italic leading-[0.95] tracking-[-0.04em] sm:text-5xl md:text-7xl">
         {title}
         <span className="block text-white/40">{muted}</span>
       </h2>
