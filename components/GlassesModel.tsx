@@ -6,7 +6,7 @@ import type { MotionValue } from "framer-motion";
 import { useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
 
-export const FACE_REFLECTION_INTENSITY = 1.0;
+export const FACE_REFLECTION_INTENSITY = 3.2;
 export const LENS_OPACITY = 0.88;
 export const LENS_PURPLE_SHEEN = 1;
 
@@ -14,6 +14,14 @@ type GlassesModelProps = ThreeElements["group"] & {
   fit?: boolean;
   reflectionProgress?: MotionValue<number>;
 };
+
+function clamp01(value: number) {
+  return Math.min(Math.max(value, 0), 1);
+}
+
+function smoothStep(value: number) {
+  return value * value * (3 - 2 * value);
+}
 
 function isLensMaterial(material: THREE.Material, meshName: string) {
   const name = `${material.name} ${meshName}`.toLowerCase();
@@ -51,62 +59,96 @@ function createFaceReflectionTexture() {
   }
 
   const background = context.createLinearGradient(0, 0, 0, canvas.height);
-  background.addColorStop(0, "#efe7ff");
-  background.addColorStop(0.5, "#ffffff");
-  background.addColorStop(1, "#d8c5f0");
+  background.addColorStop(0, "#f3ecff");
+  background.addColorStop(0.45, "#ffffff");
+  background.addColorStop(1, "#bfa7dc");
 
   context.fillStyle = background;
   context.fillRect(0, 0, canvas.width, canvas.height);
 
-  const drawSilhouette = (centerRatio: number, scale: number, alpha: number) => {
+  const drawFaceReflection = (centerRatio: number, scale: number, alpha: number) => {
     const centerX = canvas.width * centerRatio;
-    const headTop = canvas.height * 0.06;
-    const headWidth = canvas.width * 0.32 * scale;
-    const headHeight = canvas.height * 0.76 * scale;
-    const shoulderY = canvas.height * 0.74;
-    const shoulderWidth = canvas.width * 0.78 * scale;
+    const centerY = canvas.height * 0.47;
+    const headWidth = canvas.width * 0.28 * scale;
+    const headHeight = canvas.height * 0.68 * scale;
+    const eyeY = centerY - headHeight * 0.08;
+    const eyeGap = headWidth * 0.22;
+    const eyeWidth = headWidth * 0.16;
+    const shoulderY = centerY + headHeight * 0.36;
+    const shoulderWidth = canvas.width * 0.52 * scale;
 
     context.globalAlpha = alpha;
-    context.fillStyle = "#2a1640";
+
+    context.fillStyle = "#eadcf5";
     context.beginPath();
-    context.ellipse(
-      centerX,
-      headTop + headHeight * 0.43,
-      headWidth * 0.5,
-      headHeight * 0.47,
-      0,
-      0,
-      Math.PI * 2,
-    );
-    context.moveTo(centerX - headWidth * 0.22, shoulderY - canvas.height * 0.15);
+    context.ellipse(centerX, centerY, headWidth * 0.48, headHeight * 0.5, 0, 0, Math.PI * 2);
+    context.fill();
+
+    context.strokeStyle = "#241331";
+    context.lineWidth = 9 * scale;
+    context.lineCap = "round";
+    context.lineJoin = "round";
+
+    context.beginPath();
+    context.ellipse(centerX, centerY, headWidth * 0.5, headHeight * 0.52, 0, 0, Math.PI * 2);
+    context.stroke();
+
+    context.beginPath();
+    context.moveTo(centerX - shoulderWidth * 0.45, canvas.height);
     context.bezierCurveTo(
-      centerX - shoulderWidth * 0.38,
+      centerX - shoulderWidth * 0.36,
+      shoulderY,
+      centerX - headWidth * 0.18,
       shoulderY - canvas.height * 0.08,
-      centerX - shoulderWidth * 0.48,
-      shoulderY + canvas.height * 0.1,
-      centerX - shoulderWidth * 0.5,
+      centerX - headWidth * 0.12,
+      shoulderY - canvas.height * 0.13,
+    );
+    context.moveTo(centerX + headWidth * 0.12, shoulderY - canvas.height * 0.13);
+    context.bezierCurveTo(
+      centerX + headWidth * 0.18,
+      shoulderY - canvas.height * 0.08,
+      centerX + shoulderWidth * 0.36,
+      shoulderY,
+      centerX + shoulderWidth * 0.45,
       canvas.height,
     );
-    context.lineTo(centerX + shoulderWidth * 0.5, canvas.height);
-    context.bezierCurveTo(
-      centerX + shoulderWidth * 0.48,
-      shoulderY + canvas.height * 0.1,
-      centerX + shoulderWidth * 0.38,
-      shoulderY - canvas.height * 0.08,
-      centerX + headWidth * 0.22,
-      shoulderY - canvas.height * 0.15,
-    );
-    context.closePath();
-    context.fill();
+    context.stroke();
+
+    const drawEye = (x: number) => {
+      context.beginPath();
+      context.ellipse(x, eyeY, eyeWidth, eyeWidth * 0.44, 0, 0, Math.PI * 2);
+      context.stroke();
+      context.beginPath();
+      context.arc(x, eyeY, eyeWidth * 0.28, 0, Math.PI * 2);
+      context.fillStyle = "#241331";
+      context.fill();
+    };
+
+    context.lineWidth = 6 * scale;
+    drawEye(centerX - eyeGap);
+    drawEye(centerX + eyeGap);
+
+    context.beginPath();
+    context.moveTo(centerX - eyeGap - eyeWidth * 1.1, eyeY - eyeWidth * 1.1);
+    context.quadraticCurveTo(centerX - eyeGap, eyeY - eyeWidth * 1.55, centerX - eyeGap + eyeWidth * 1.1, eyeY - eyeWidth * 1.1);
+    context.moveTo(centerX + eyeGap - eyeWidth * 1.1, eyeY - eyeWidth * 1.1);
+    context.quadraticCurveTo(centerX + eyeGap, eyeY - eyeWidth * 1.55, centerX + eyeGap + eyeWidth * 1.1, eyeY - eyeWidth * 1.1);
+    context.stroke();
+
+    context.beginPath();
+    context.moveTo(centerX, eyeY + eyeWidth * 0.5);
+    context.quadraticCurveTo(centerX - eyeWidth * 0.4, centerY + headHeight * 0.08, centerX, centerY + headHeight * 0.13);
+    context.stroke();
+
     context.globalAlpha = 1;
   };
 
-  const silhouettePositions = [0.12, 0.38, 0.62, 0.88];
+  const reflectionPositions = [0.15, 0.38, 0.62, 0.85];
 
-  context.filter = "blur(28px)";
-  silhouettePositions.forEach((centerRatio) => drawSilhouette(centerRatio, 1.12, 1));
-  context.filter = "blur(10px)";
-  silhouettePositions.forEach((centerRatio) => drawSilhouette(centerRatio, 1, 0.96));
+  context.filter = "blur(18px)";
+  reflectionPositions.forEach((centerRatio) => drawFaceReflection(centerRatio, 1.12, 0.58));
+  context.filter = "blur(1.5px)";
+  reflectionPositions.forEach((centerRatio) => drawFaceReflection(centerRatio, 0.95, 0.9));
   context.filter = "none";
 
   const texture = new THREE.CanvasTexture(canvas);
@@ -129,7 +171,7 @@ function tuneMaterial(material: THREE.Material, meshName: string) {
     standardMaterial.color = new THREE.Color("#9fceb6");
     standardMaterial.metalness = 0.05;
     standardMaterial.roughness = 0.15;
-    standardMaterial.envMapIntensity = FACE_REFLECTION_INTENSITY;
+    standardMaterial.envMapIntensity = 0.35;
     standardMaterial.opacity = LENS_OPACITY;
     material.depthWrite = true;
     material.depthTest = true;
@@ -228,7 +270,7 @@ export function GlassesModel({ fit = true, reflectionProgress, ...props }: Glass
         if (faceReflectionTexture && reflectionProgress && isLensMaterial(material, object.name)) {
           const lensMaterial = material as THREE.MeshStandardMaterial;
           lensMaterial.envMap = faceReflectionTexture;
-          lensMaterial.envMapIntensity = FACE_REFLECTION_INTENSITY;
+          lensMaterial.envMapIntensity = 0.35;
           lensMaterial.needsUpdate = true;
           lensMaterialsRef.current.push(lensMaterial);
         }
@@ -241,8 +283,15 @@ export function GlassesModel({ fit = true, reflectionProgress, ...props }: Glass
       return;
     }
 
+    const progress = reflectionProgress.get();
+    const faceOnPhase = smoothStep(clamp01((progress - 0.58) / 0.22));
+    const zoomPhase = smoothStep(clamp01((progress - 0.82) / 0.14));
+    const reflectionStrength = Math.max(faceOnPhase * 0.72, zoomPhase);
+
     lensMaterialsRef.current.forEach((material) => {
-      material.envMapIntensity = FACE_REFLECTION_INTENSITY;
+      material.envMapIntensity = THREE.MathUtils.lerp(0.35, FACE_REFLECTION_INTENSITY, reflectionStrength);
+      material.roughness = THREE.MathUtils.lerp(0.18, 0.06, reflectionStrength);
+      material.opacity = THREE.MathUtils.lerp(0.78, LENS_OPACITY, reflectionStrength);
     });
   });
 
