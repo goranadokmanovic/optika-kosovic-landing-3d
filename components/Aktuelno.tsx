@@ -54,7 +54,7 @@ export default function Aktuelno() {
                       Trajanje popusta
                     </p>
                     <p className="mt-4 font-serif text-3xl italic leading-tight tracking-[-0.04em] text-neutral-950 md:text-5xl">
-                      Do 31.12.2025.
+                      Do isteka zaliha.
                     </p>
                   </div>
                 </div>

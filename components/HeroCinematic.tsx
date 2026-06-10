@@ -173,7 +173,7 @@ function HeroScene({
       <directionalLight position={[4, 3, 5]} intensity={1.05} />
       <Suspense fallback={null}>
         <group ref={groupRef}>
-          <GlassesModel reflectionProgress={pinProgressValue} />
+          <GlassesModel />
         </group>
         <Environment preset="studio" environmentIntensity={0.9} />
       </Suspense>
