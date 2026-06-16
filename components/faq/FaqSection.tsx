@@ -17,13 +17,13 @@ export function FaqSection({
   imageCaption?: string;
 }) {
   return (
-    <section id={id} className="scroll-mt-28 border-b border-black/10 py-14 md:py-20">
+    <section id={id} className="scroll-mt-28 border-b border-charcoal/10 py-14 md:py-20">
       <h2 className="font-serif text-3xl italic leading-tight tracking-[-0.03em] text-accent md:text-5xl">
         {title}
       </h2>
-      <div className="mt-8 space-y-6 text-base leading-8 text-neutral-950/70 md:text-lg">{children}</div>
+      <div className="mt-8 space-y-6 text-base leading-8 text-body md:text-lg">{children}</div>
       {image ? (
-        <figure className="mt-10 overflow-hidden rounded-2xl border border-black/10 bg-white/80">
+        <figure className="luxury-card mt-10 overflow-hidden">
           <Image
             src={image}
             alt={imageAlt ?? title}
@@ -32,7 +32,7 @@ export function FaqSection({
             className="h-auto w-full object-contain"
           />
           {imageCaption ? (
-            <figcaption className="border-t border-black/10 px-5 py-4 text-sm text-neutral-950/45">{imageCaption}</figcaption>
+            <figcaption className="border-t border-charcoal/10 px-5 py-4 text-sm text-body/65">{imageCaption}</figcaption>
           ) : null}
         </figure>
       ) : null}
@@ -59,9 +59,9 @@ export function FaqList({ items }: { items: string[] }) {
 
 export function FaqQa({ question, answer }: { question: string; answer: string }) {
   return (
-    <div className="rounded-2xl border border-black/10 bg-white/75 p-5 md:p-6">
-      <p className="font-semibold text-neutral-950">{question}</p>
-      <p className="mt-3 text-neutral-950/70">{answer}</p>
+    <div className="luxury-card p-5 md:p-6">
+      <p className="font-semibold text-charcoal">{question}</p>
+      <p className="mt-3 text-body">{answer}</p>
     </div>
   );
 }
@@ -72,7 +72,7 @@ export function FaqNote({ children, variant = "default" }: { children: ReactNode
       ? "border-red-500/30 bg-red-500/10 text-red-700"
       : variant === "warning"
         ? "border-accent/30 bg-accent/10 text-accent"
-        : "border-black/10 bg-white/75 text-neutral-950/70";
+        : "border-charcoal/10 bg-white/75 text-body";
 
   return <p className={`rounded-xl border px-4 py-3 text-sm md:text-base ${styles}`}>{children}</p>;
 }

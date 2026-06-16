@@ -4,6 +4,7 @@ import { useState } from "react";
 import { motion, useMotionValueEvent, useScroll } from "framer-motion";
 import { ChevronDown, Search } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { faqHref, faqItems, faqSectionHref } from "@/lib/faq-data";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
@@ -56,12 +57,12 @@ export default function Header({ solid = false }: { solid?: boolean }) {
       transition={{ duration: 0.9, ease: EASE }}
       className={`fixed left-0 right-0 top-0 z-50 transition-colors duration-500 ${
         scrolled
-          ? "border-b border-black/10 bg-white/85 text-neutral-950 backdrop-blur-md"
-          : "bg-transparent text-neutral-950"
+          ? "border-b border-charcoal/10 bg-white/95 text-charcoal backdrop-blur-[10px]"
+          : "bg-white/95 text-charcoal backdrop-blur-[10px]"
       }`}
     >
       <div className="flex w-full items-center justify-between px-4 py-3 md:py-4 md:pl-16 md:pr-3">
-        <a href="/" aria-label="Optika Kosović početna" className="flex min-w-0 items-center gap-3">
+        <Link href="/" aria-label="Optika Kosović početna" className="flex min-w-0 items-center gap-3">
           <Image
             src="/images/profilna-slika.jpg"
             alt="Optika Kosović logo"
@@ -74,15 +75,11 @@ export default function Header({ solid = false }: { solid?: boolean }) {
             <div className="truncate font-serif text-xl italic leading-none tracking-[-0.04em] md:text-[1.82rem]">
               OPTIKA KOSOVIĆ
             </div>
-            <div
-              className={`mt-1 truncate font-mono text-[9px] uppercase tracking-[0.25em] md:text-[11px] md:tracking-[0.35em] ${
-                scrolled ? "text-neutral-950/45" : "text-neutral-950/45"
-              }`}
-            >
+            <div className="mt-1 truncate font-mono text-[9px] uppercase tracking-[0.25em] text-label md:text-[11px] md:tracking-[0.35em]">
               NOVI BANOVCI
             </div>
           </div>
-        </a>
+        </Link>
 
         <nav className="hidden items-center gap-3 md:flex lg:gap-7">
           {navItems.map((item) => {
@@ -99,19 +96,15 @@ export default function Header({ solid = false }: { solid?: boolean }) {
             <div key={`${item.label}-${item.href}`} className="group/nav relative">
               <a
                 href={item.href}
-                className={`relative inline-flex items-center gap-1.5 text-sm font-semibold transition-colors ${
-                  scrolled
-                    ? "text-neutral-950/65 hover:text-neutral-950"
-                    : "text-neutral-950/65 hover:text-neutral-950"
-                }`}
+                className="relative inline-flex items-center gap-1.5 text-sm font-semibold text-charcoal/80 transition-colors hover:text-accent"
               >
                 {item.label}
                 {item.hasDropdown ? <ChevronDown size={14} strokeWidth={2} /> : null}
-                <span className="absolute -bottom-2 left-0 h-px w-full origin-left scale-x-0 bg-accent transition-transform duration-300 group-hover/nav:scale-x-100" />
+                <span className="absolute -bottom-2 left-0 h-px w-full origin-left scale-x-0 bg-gold transition-transform duration-300 group-hover/nav:scale-x-100" />
               </a>
 
               {item.dropdownType ? (
-                <div className={`invisible absolute left-1/2 top-full mt-4 -translate-x-1/2 translate-y-2 rounded-sm border border-black/10 bg-white p-3 text-neutral-950 opacity-0 shadow-2xl transition-all duration-200 group-hover/nav:visible group-hover/nav:translate-y-0 group-hover/nav:opacity-100 group-focus-within/nav:visible group-focus-within/nav:translate-y-0 group-focus-within/nav:opacity-100 ${
+                <div className={`invisible absolute left-1/2 top-full mt-4 -translate-x-1/2 translate-y-2 border border-charcoal/10 bg-white/95 p-3 text-charcoal opacity-0 shadow-2xl backdrop-blur-[10px] transition-all duration-200 group-hover/nav:visible group-hover/nav:translate-y-0 group-hover/nav:opacity-100 group-focus-within/nav:visible group-focus-within/nav:translate-y-0 group-focus-within/nav:opacity-100 ${
                   item.dropdownType === "faq" ? "w-96" : "w-72"
                 }`}>
                   <div className="space-y-1">
@@ -119,9 +112,9 @@ export default function Header({ solid = false }: { solid?: boolean }) {
                       <a
                         key={category.label}
                         href={category.href}
-                        className="flex items-center gap-3 rounded-sm px-4 py-3 text-sm font-semibold text-neutral-700 transition-colors hover:bg-neutral-100 hover:text-neutral-950"
+                        className="flex items-center gap-3 px-4 py-3 text-sm font-semibold text-body transition-colors hover:bg-accent/5 hover:text-accent"
                       >
-                        <span className="flex h-4 w-4 shrink-0 items-center justify-center border border-neutral-400 text-neutral-500">
+                        <span className="flex h-4 w-4 shrink-0 items-center justify-center border border-accent/35 text-accent/70">
                           <ChevronDown size={10} strokeWidth={2} />
                         </span>
                         <span className="truncate">{category.label}</span>
@@ -136,9 +129,7 @@ export default function Header({ solid = false }: { solid?: boolean }) {
           <button
             type="button"
             aria-label="Pretraga"
-            className={`transition-colors ${
-              scrolled ? "text-neutral-950/80 hover:text-neutral-950" : "text-neutral-950/70 hover:text-neutral-950"
-            }`}
+            className="text-charcoal/80 transition-colors hover:text-accent"
           >
             <Search size={20} strokeWidth={2.2} />
           </button>
@@ -146,7 +137,7 @@ export default function Header({ solid = false }: { solid?: boolean }) {
 
         <a
           href="#kontakt"
-          className="rounded-full border border-accent/40 px-4 py-2 font-mono text-[9px] uppercase tracking-[0.2em] text-accent md:hidden"
+          className="luxury-btn px-4 py-2 font-mono text-[9px] uppercase tracking-[0.2em] md:hidden"
         >
           Kontakt
         </a>

@@ -5,7 +5,7 @@ import dynamic from "next/dynamic";
 const ShowroomViewer = dynamic(() => import("@/components/ShowroomViewer"), {
   ssr: false,
   loading: () => (
-    <div className="flex h-full w-full items-center justify-center font-mono text-[10px] uppercase tracking-[0.3em] text-neutral-950/45">
+    <div className="flex h-full w-full items-center justify-center font-mono text-[10px] uppercase tracking-[0.3em] text-label">
       Učitavanje modela
     </div>
   ),

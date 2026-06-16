@@ -1,23 +1,15 @@
 "use client";
 
 import { Suspense, useEffect, useRef } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { ContactShadows, Environment } from "@react-three/drei";
-import {
-  motion,
-  type MotionValue,
-  useScroll,
-  useTransform,
-} from "framer-motion";
+import { motion, type MotionValue, useTransform } from "framer-motion";
 import * as THREE from "three";
 import { GlassesModel } from "@/components/GlassesModel";
+import { useHeroPinProgress } from "@/components/hooks/useHeroPinProgress";
 
 function clamp(value: number) {
   return Math.min(Math.max(value, 0), 1);
-}
-
-function pinProgress(progress: number) {
-  return clamp((progress - 0.25) / 0.5);
 }
 
 function smooth(value: number) {
@@ -25,12 +17,26 @@ function smooth(value: number) {
 }
 
 const HERO_SHADOW_OPACITY = 0.28;
+const DRAG_SENSITIVITY = 0.005;
+const DRAG_LERP = 0.05;
+const DRAG_RETURN_LERP = 0.06;
+const DRAG_RETURN_EPSILON = 0.002;
+const DRAG_THRESHOLD = 6;
 
-function FadingHeroShadow({ pinProgressValue }: { pinProgressValue: MotionValue<number> }) {
+function disableCanvasEvents() {
+  return {
+    priority: 0,
+    enabled: false,
+    connect: () => {},
+    disconnect: () => {},
+  };
+}
+
+function FadingHeroShadow({ progressRef }: { progressRef: React.RefObject<number> }) {
   const shadowRef = useRef<THREE.Group>(null);
 
   useFrame(() => {
-    const zoomFade = 1 - smooth(clamp((pinProgressValue.get() - 0.8) / 0.14));
+    const zoomFade = 1 - smooth(clamp((progressRef.current - 0.8) / 0.14));
     const opacity = HERO_SHADOW_OPACITY * zoomFade;
 
     shadowRef.current?.traverse((object) => {
@@ -60,14 +66,146 @@ function FadingHeroShadow({ pinProgressValue }: { pinProgressValue: MotionValue<
   );
 }
 
-function HeroScene({
-  pinProgressValue,
-}: {
-  pinProgressValue: MotionValue<number>;
-}) {
+function HeroScene({ progressRef }: { progressRef: React.RefObject<number> }) {
+  const { gl } = useThree();
   const groupRef = useRef<THREE.Group>(null);
   const mouseTarget = useRef({ x: 0, y: 0 });
   const mouseCurrent = useRef({ x: 0, y: 0 });
+  const dragTarget = useRef({ x: 0, y: 0 });
+  const dragCurrent = useRef({ x: 0, y: 0 });
+  const dragReturning = useRef(false);
+  const dragState = useRef({
+    pending: false,
+    active: false,
+    pointerId: -1,
+    startX: 0,
+    startY: 0,
+    lastX: 0,
+    lastY: 0,
+  });
+
+  useEffect(() => {
+    const canvas = gl.domElement;
+
+    const startDragReturn = () => {
+      dragReturning.current = true;
+      dragTarget.current.x = 0;
+      dragTarget.current.y = 0;
+    };
+
+    const resetDrag = () => {
+      const { pointerId } = dragState.current;
+
+      dragState.current.pending = false;
+      dragState.current.active = false;
+      dragState.current.pointerId = -1;
+      canvas.classList.remove("is-dragging");
+      canvas.style.removeProperty("touch-action");
+
+      if (pointerId !== -1 && canvas.hasPointerCapture(pointerId)) {
+        canvas.releasePointerCapture(pointerId);
+      }
+    };
+
+    const onPointerDown = (event: PointerEvent) => {
+      if (event.button !== 0 || event.pointerType !== "mouse") {
+        return;
+      }
+
+      dragState.current.pending = true;
+      dragState.current.active = false;
+      dragState.current.pointerId = event.pointerId;
+      dragState.current.startX = event.clientX;
+      dragState.current.startY = event.clientY;
+      dragState.current.lastX = event.clientX;
+      dragState.current.lastY = event.clientY;
+      dragTarget.current.x = dragCurrent.current.x;
+      dragTarget.current.y = dragCurrent.current.y;
+    };
+
+    const onPointerMove = (event: PointerEvent) => {
+      if (event.pointerId !== dragState.current.pointerId) {
+        return;
+      }
+
+      if (!dragState.current.pending && !dragState.current.active) {
+        return;
+      }
+
+      if (dragState.current.pending && !dragState.current.active) {
+        const deltaX = event.clientX - dragState.current.startX;
+        const deltaY = event.clientY - dragState.current.startY;
+
+        if (Math.hypot(deltaX, deltaY) < DRAG_THRESHOLD) {
+          return;
+        }
+
+        dragState.current.pending = false;
+        dragState.current.active = true;
+        dragReturning.current = false;
+        canvas.setPointerCapture(event.pointerId);
+        canvas.classList.add("is-dragging");
+        canvas.style.touchAction = "none";
+      }
+
+      if (!dragState.current.active) {
+        return;
+      }
+
+      event.preventDefault();
+
+      const moveDeltaX = event.clientX - dragState.current.lastX;
+      const moveDeltaY = event.clientY - dragState.current.lastY;
+      dragState.current.lastX = event.clientX;
+      dragState.current.lastY = event.clientY;
+
+      dragTarget.current.y += moveDeltaX * DRAG_SENSITIVITY;
+      dragTarget.current.x += moveDeltaY * DRAG_SENSITIVITY;
+    };
+
+    const onPointerEnd = (event: PointerEvent) => {
+      if (
+        dragState.current.pointerId !== -1 &&
+        event.pointerId !== dragState.current.pointerId
+      ) {
+        return;
+      }
+
+      const wasDragging = dragState.current.active;
+      resetDrag();
+
+      if (wasDragging) {
+        startDragReturn();
+      }
+    };
+
+    const onLostPointerCapture = () => {
+      if (dragState.current.active) {
+        startDragReturn();
+      }
+
+      resetDrag();
+    };
+
+    canvas.addEventListener("pointerdown", onPointerDown);
+    canvas.addEventListener("pointermove", onPointerMove);
+    canvas.addEventListener("pointerup", onPointerEnd);
+    canvas.addEventListener("pointercancel", onPointerEnd);
+    canvas.addEventListener("lostpointercapture", onLostPointerCapture);
+    window.addEventListener("pointerup", onPointerEnd);
+    window.addEventListener("pointercancel", onPointerEnd);
+
+    return () => {
+      canvas.removeEventListener("pointerdown", onPointerDown);
+      canvas.removeEventListener("pointermove", onPointerMove);
+      canvas.removeEventListener("pointerup", onPointerEnd);
+      canvas.removeEventListener("pointercancel", onPointerEnd);
+      canvas.removeEventListener("lostpointercapture", onLostPointerCapture);
+      window.removeEventListener("pointerup", onPointerEnd);
+      window.removeEventListener("pointercancel", onPointerEnd);
+      resetDrag();
+    };
+  }, [gl]);
 
   useEffect(() => {
     const canHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
@@ -77,6 +215,10 @@ function HeroScene({
     }
 
     const handlePointerMove = (event: PointerEvent) => {
+      if (dragState.current.pending || dragState.current.active) {
+        return;
+      }
+
       mouseTarget.current.x = event.clientX / window.innerWidth - 0.5;
       mouseTarget.current.y = event.clientY / window.innerHeight - 0.5;
     };
@@ -95,7 +237,7 @@ function HeroScene({
       return;
     }
 
-    const t = pinProgressValue.get();
+    const t = progressRef.current;
     const rotatePhase = clamp(t / 0.6);
     const facePhase = smooth(clamp((t - 0.6) / 0.25));
     const zoomPhase = smooth(clamp((t - 0.85) / 0.15));
@@ -123,15 +265,37 @@ function HeroScene({
     const mouseRotationX = -mouseCurrent.current.y * 0.2 * mouseFade;
     const mouseRotationY = mouseCurrent.current.x * 0.2 * mouseFade;
 
+    if (dragState.current.active) {
+      dragCurrent.current.x = THREE.MathUtils.lerp(
+        dragCurrent.current.x,
+        dragTarget.current.x,
+        DRAG_LERP,
+      );
+      dragCurrent.current.y = THREE.MathUtils.lerp(
+        dragCurrent.current.y,
+        dragTarget.current.y,
+        DRAG_LERP,
+      );
+    } else if (dragReturning.current) {
+      dragCurrent.current.x = THREE.MathUtils.lerp(dragCurrent.current.x, 0, DRAG_RETURN_LERP);
+      dragCurrent.current.y = THREE.MathUtils.lerp(dragCurrent.current.y, 0, DRAG_RETURN_LERP);
+
+      if (Math.hypot(dragCurrent.current.x, dragCurrent.current.y) < DRAG_RETURN_EPSILON) {
+        dragCurrent.current.x = 0;
+        dragCurrent.current.y = 0;
+        dragReturning.current = false;
+      }
+    }
+
     group.rotation.x = THREE.MathUtils.damp(
       group.rotation.x,
-      scrollRotationX + mouseRotationX + idleSway * mouseFade,
+      scrollRotationX + mouseRotationX + idleSway * mouseFade + dragCurrent.current.x,
       5,
       delta,
     );
     group.rotation.y = THREE.MathUtils.damp(
       group.rotation.y,
-      scrollRotationY + mouseRotationY,
+      scrollRotationY + mouseRotationY + dragCurrent.current.y,
       5,
       delta,
     );
@@ -177,7 +341,7 @@ function HeroScene({
         </group>
         <Environment preset="studio" environmentIntensity={0.9} />
       </Suspense>
-      <FadingHeroShadow pinProgressValue={pinProgressValue} />
+      <FadingHeroShadow progressRef={progressRef} />
     </>
   );
 }
@@ -212,13 +376,13 @@ function Caption({
   return (
     <motion.div
       style={{ opacity, y }}
-      className={`pointer-events-none absolute z-30 max-w-xl ${position}`}
+      className={`pointer-events-none absolute z-40 max-w-xl ${position}`}
     >
       <div className={`mb-3 flex items-center gap-3 md:mb-4 ${align === "bottom" ? "justify-center" : ""}`}>
-        <span className="font-mono text-[9px] uppercase tracking-[0.24em] text-accent md:text-[10px] md:tracking-[0.3em]">
+        <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-gold md:text-[10px]">
           {eyebrow}
         </span>
-        <div className="h-px max-w-[180px] flex-1 bg-gradient-to-r from-accent/40 to-transparent" />
+        <div className="h-px max-w-[180px] flex-1 bg-gradient-to-r from-[#c9a84c]/60 to-transparent" />
       </div>
       <h1
         className={
@@ -237,11 +401,7 @@ function Caption({
 
 export default function HeroCinematic() {
   const sectionRef = useRef<HTMLElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start end", "end start"],
-  });
-  const t = useTransform(scrollYProgress, pinProgress);
+  const { progressRef, progress: t } = useHeroPinProgress(sectionRef);
 
   const firstOpacity = useTransform(t, [0, 0.32, 0.55], [1, 1, 0]);
   const firstY = useTransform(t, [0, 0.55], [0, -30]);
@@ -251,10 +411,11 @@ export default function HeroCinematic() {
   const thirdY = useTransform(t, [0.56, 1], [36, -24]);
 
   return (
-    <section ref={sectionRef} className="relative h-[300vh] bg-[#f5f5f5]">
-      <div className="sticky top-0 h-screen w-full overflow-hidden bg-[#f5f5f5]">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_54%,rgba(10,10,10,0.08),transparent_38%)]" />
+    <section ref={sectionRef} className="relative h-[300vh]">
+      <div className="sticky top-0 h-screen w-full overflow-hidden">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_54%,rgba(232,224,240,0.4),transparent_400px)]" />
         <Canvas
+          events={disableCanvasEvents}
           gl={{ alpha: true, toneMapping: THREE.NoToneMapping }}
           style={{ background: "transparent" }}
           camera={{ position: [0, 0, 4.5], fov: 38 }}
@@ -263,9 +424,9 @@ export default function HeroCinematic() {
             gl.toneMappingExposure = 1;
             scene.environmentIntensity = 0.9;
           }}
-          className="absolute inset-0 z-10"
+          className="hero-glasses-canvas absolute left-1/2 top-[48%] z-10 h-[60vw] max-h-[320px] w-[60vw] max-w-[60vw] -translate-x-1/2 md:inset-0 md:h-auto md:max-h-none md:w-auto md:max-w-none md:translate-x-0"
         >
-          <HeroScene pinProgressValue={t} />
+          <HeroScene progressRef={progressRef} />
         </Canvas>
 
         <Caption
@@ -295,7 +456,7 @@ export default function HeroCinematic() {
         />
 
         <div className="absolute bottom-8 left-6 z-30 md:left-12 lg:left-20">
-          <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-neutral-950/50">
+          <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-accent">
             SKROLUJTE
           </span>
         </div>

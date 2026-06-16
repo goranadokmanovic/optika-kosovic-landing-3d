@@ -8,7 +8,7 @@ const EASE = [0.16, 1, 0.3, 1] as const;
 
 export default function Brands() {
   return (
-    <section id="brendovi" className="bg-[#f5f5f5] py-20 md:py-44">
+    <section id="brendovi" className="luxury-section bg-luxury-white py-20 md:py-44">
       <div className="container mx-auto max-w-[1400px] px-6 md:px-12">
         <SectionHeading eyebrow="06 · Brendovi" title="Proverena imena." muted="Bez buke." />
       </div>
@@ -18,10 +18,10 @@ export default function Brands() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, amount: 0.3 }}
         transition={{ duration: 0.9, ease: EASE }}
-        className="relative mt-12 overflow-hidden border-y border-black/10 py-6 md:mt-16 md:py-8"
+        className="relative mt-12 overflow-hidden border-y border-charcoal/10 py-6 md:mt-16 md:py-8"
       >
-        <div className="pointer-events-none absolute bottom-0 left-0 top-0 z-10 w-24 bg-gradient-to-r from-[#f5f5f5] to-transparent" />
-        <div className="pointer-events-none absolute bottom-0 right-0 top-0 z-10 w-24 bg-gradient-to-l from-[#f5f5f5] to-transparent" />
+        <div className="pointer-events-none absolute bottom-0 left-0 top-0 z-10 w-24 bg-gradient-to-r from-white to-transparent" />
+        <div className="pointer-events-none absolute bottom-0 right-0 top-0 z-10 w-24 bg-gradient-to-l from-white to-transparent" />
         <motion.div
           animate={{ x: ["0%", "-50%"] }}
           transition={{ duration: 28, repeat: Infinity, ease: "linear" }}
@@ -30,10 +30,10 @@ export default function Brands() {
           {[...brands, ...brands].map((brand, index) => (
             <span
               key={`${brand}-${index}`}
-              className="font-mono text-3xl uppercase tracking-[0.2em] text-neutral-950/18 md:text-7xl md:tracking-[0.25em]"
+              className="font-mono text-3xl uppercase tracking-[0.2em] text-charcoal/15 md:text-7xl md:tracking-[0.25em]"
             >
               {brand}
-              <span className="mx-5 text-accent/50 md:mx-8">·</span>
+              <span className="mx-5 text-gold/50 md:mx-8">·</span>
             </span>
           ))}
         </motion.div>
