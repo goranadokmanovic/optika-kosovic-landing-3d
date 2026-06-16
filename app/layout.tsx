@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist_Mono, Inter, Playfair_Display } from "next/font/google";
 import CustomCursor from "@/components/effects/CustomCursor";
+import SiteBackground from "@/components/SiteBackground";
 import "./globals.css";
 
 const inter = Inter({
@@ -37,6 +38,7 @@ export default function RootLayout({
       className={`${inter.variable} ${playfairDisplay.variable} ${geistMono.variable} h-full scroll-smooth antialiased`}
     >
       <body className="flex min-h-full flex-col font-sans text-text-primary">
+        <SiteBackground />
         <CustomCursor />
         {children}
       </body>
